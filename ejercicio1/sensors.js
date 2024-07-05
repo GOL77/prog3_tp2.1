@@ -1,4 +1,27 @@
-class Sensor {}
+class Sensor {
+    constructor(id, name, type, value, unit, updatedAt){
+        this.id=id;
+        this.name=name;
+        this.conditionType(type);
+        this.value=value;
+        this.unit=unit;
+        this.updatedAt=updatedAt;
+    }
+    conditionType(type){
+        const conditions = ["temperature","humidity","pressure"];
+        conditions.forEach(element => {
+            if(type === element){
+                consola.long("valor ingresado correctamente");
+                this.type=type;
+            }
+
+        });
+    }
+    set updatevalue(Value){
+        this.value = value;
+        this.updatedAt = new Date().toString();
+    }
+    }
 
 class SensorManager {
     constructor() {
@@ -33,7 +56,28 @@ class SensorManager {
         }
     }
 
-    async loadSensors(url) {}
+    async loadSensors(url) {
+        await fetch(url)
+            
+          .then((response)=>response.json())
+          .then((data)=>{
+            data.forEach ((sensorData) => { 
+                const sensor = new Sensor(
+                    sensorData.id,
+                    sensorData.name,
+                    sensorData.type,
+                    sensorData.value,
+                    sensorData.unit,
+                    sensorData.updatedAt
+                );
+                this.addSensor(sensor)
+            });
+
+          })
+          .finally(()=>{
+            this.render();
+          });
+    }
 
     render() {
         const container = document.getElementById("sensor-container");
@@ -58,9 +102,9 @@ class SensorManager {
                                ${sensor.value} ${sensor.unit}
                             </p>
                         </div>
-                        <time datetime="${sensor.updated_at}">
+                        <time datetime="${sensor.updatedAt}">
                             Última actualización: ${new Date(
-                                sensor.updated_at
+                                sensor.updatedAt
                             ).toLocaleString()}
                         </time>
                     </div>
