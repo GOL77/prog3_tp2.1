@@ -1,27 +1,28 @@
 class Sensor {
     constructor(id, name, type, value, unit, updatedAt){
-        this.id=id;
-        this.name=name;
+        this.id = id;
+        this.name = name;
         this.conditionType(type);
-        this.value=value;
-        this.unit=unit;
-        this.updatedAt=updatedAt;
+        this.value = value;
+        this.unit = unit;
+        this.updatedAt = updatedAt;
     }
     conditionType(type){
-        const conditions = ["temperature","humidity","pressure"];
+        const conditions = [`temperatura`, `humidity`, `pressure`];
         conditions.forEach(element => {
             if(type === element){
-                consola.long("valor ingresado correctamente");
+                console.log("valor ingresado correctamente.");
                 this.type=type;
             }
-
         });
     }
-    set updatevalue(Value){
+    set updateValue(value){
         this.value = value;
-        this.updatedAt = new Date().toString();
+        //this.updatedAt = new Date().toString();
+
     }
-    }
+   
+}
 
 class SensorManager {
     constructor() {
@@ -50,6 +51,7 @@ class SensorManager {
                     newValue = (Math.random() * 100).toFixed(2);
             }
             sensor.updateValue = newValue;
+            
             this.render();
         } else {
             console.error(`Sensor ID ${id} no encontrado`);
@@ -58,25 +60,24 @@ class SensorManager {
 
     async loadSensors(url) {
         await fetch(url)
-            
-          .then((response)=>response.json())
-          .then((data)=>{
-            data.forEach ((sensorData) => { 
+        .then((response) => response.json())
+        .then(data => {
+            data.forEach((sensorData) => {
                 const sensor = new Sensor(
                     sensorData.id,
-                    sensorData.name,
+                    sensorData.nama,
                     sensorData.type,
                     sensorData.value,
                     sensorData.unit,
-                    sensorData.updatedAt
-                );
-                this.addSensor(sensor)
-            });
+                    sensorData.updatedAt,
 
-          })
-          .finally(()=>{
+                );
+                this.addSensor(sensor);
+            });
+        })
+        .finally(() =>{
             this.render();
-          });
+        });
     }
 
     render() {
